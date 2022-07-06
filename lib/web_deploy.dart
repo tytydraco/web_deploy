@@ -1,10 +1,13 @@
 import 'dart:io';
 
-import 'package:collection/collection.dart';
 import 'package:yaml/yaml.dart';
 
+/// Deploy a flutter app for a web release. Configuration is done in the
+/// `pubspec.yaml` file.
 class WebDeploy {
-  Future<YamlMap> _loadFromPubspec() async {
+  /// Return a [YamlMap] of the `pubspec.yaml` file after doing initial
+  /// sanity checks.
+  Future<YamlMap> _getPubspecYaml() async {
     final pubspec = File('pubspec.yaml');
 
     final pubspecExists = await pubspec.exists();
@@ -16,49 +19,60 @@ class WebDeploy {
     final pubspecContents = await pubspec.readAsString();
     final pubspecMap = loadYaml(pubspecContents);
 
+    return pubspecMap;
+  }
+
+  /// Make sure the `pubspec.yaml` file is properly formatted.
+  void _assertYamlSanity(YamlMap pubspecMap) {
     if (pubspecMap['name'] == null) {
       stderr.writeln('Error: no name in pubspec.yaml');
       exit(1);
     }
-
-    if (pubspecMap['dev_dependencies'] == null) {
-      stderr.writeln('Error: dev_dependencies does not exist in pubspec.yaml');
-      exit(1);
-    }
-
-    if (pubspecMap['dev_dependencies']['web_deploy'] == null) {
-      stderr.writeln('Error: web_deploy does not exist in dev_dependencies');
-      exit(1);
-    }
-
-    return pubspecMap;
   }
 
+  /// Build the web release variant using the configuration from
+  /// `pubspec.yaml`.
   Future<void> buildForWeb() async {
     stdout.writeln(' * Parsing pubspec.yaml');
-    final pubspecMap = await _loadFromPubspec();
+    final pubspecMap = await _getPubspecYaml();
+    _assertYamlSanity(pubspecMap);
 
-    final String name = pubspecMap['name']!;
-    final bool release = pubspecMap['dev_dependencies']['web_deploy']['release'] ?? true;
-    final String webRenderer = pubspecMap['dev_dependencies']['web_deploy']['web_renderer'] ?? 'html';
-    final bool indexRedirect = pubspecMap['dev_dependencies']['web_deploy']['index_redirect'] ?? true;
+    final name = pubspecMap['name']!;
+
+    // Default values
+    var release = true;
+    var webRenderer = 'html';
+    var indexRedirect = true;
+
+    // Overrides via pubspec.yaml config
+    if (pubspecMap['web_deploy'] != null) {
+      release = pubspecMap['web_deploy']['release'] ?? true;
+      webRenderer = pubspecMap['web_deploy']['web_renderer'] ?? 'html';
+      indexRedirect = pubspecMap['web_deploy']['index_redirect'] ?? true;
+    }
+
+    // Arguments to pass to the `flutter` command
+    final arguments = [
+      'build',
+      'web',
+      '--web-renderer',
+      webRenderer,
+      '--base-href',
+      '/$name/build/web/'
+    ];
+
+    if (release) {
+      arguments.add('--release');
+    }
 
     stdout.writeln(' * Building for web');
-    await Process.run(
-      'flutter',
-      [
-        'build',
-        'web',
-        '--web-renderer', webRenderer,
-        release ? '--release' : null,
-        '--base-href', '/$name/build/web/'
-      ].whereNotNull().toList(),
-    );
+    await Process.run('flutter', arguments);
 
     if (indexRedirect) {
       stdout.writeln(' * Creating index.html redirect');
       final indexFile = File('index.html');
-      await indexFile.writeAsString('<meta http-equiv="refresh" content="0; url=./build/web/index.html">');
+      await indexFile.writeAsString('<meta http-equiv="refresh" content="0; '
+          'url=./build/web/index.html">');
     }
 
     stdout.writeln(' * Finished!');

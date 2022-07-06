@@ -1,6 +1,6 @@
 name: web_deploy
 description: A development tool to build a web release that is GitHub Pages ready.
-version: 0.0.1
+version: 0.0.3
 repository: https://www.github.com/tytydraco/web_deploy
 
 environment:
@@ -8,7 +8,6 @@ environment:
   flutter: ">=1.17.0"
 
 dependencies:
-  collection: ^1.16.0
   flutter:
     sdk: flutter
   yaml: ^3.1.1
