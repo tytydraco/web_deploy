@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+// NOTE: Dummy project to compile via web_deploy.
+
 void main() {
   runApp(const MyApp());
 }

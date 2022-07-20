@@ -1,3 +1,9 @@
+## 1.0.0
+
+* Greatly simplify the project
+* Improve error detection
+* Remove configuration options
+
 ## 0.0.3
 
 * Improve formatting and documentation
