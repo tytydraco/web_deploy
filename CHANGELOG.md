@@ -1,3 +1,7 @@
+## 1.0.2
+
+* Drop class to global functions
+
 ## 1.0.1
 
 * Follow Very Good Analysis guidelines

@@ -2,50 +2,47 @@ import 'dart:io';
 
 import 'package:yaml/yaml.dart';
 
-/// Deploy a flutter app for a web release.
-class WebDeploy {
-  /// Get pubspec [YamlMap].
-  Future<YamlMap> _getPubspecYamlMap() async {
-    final pubspecYamlFile = File('pubspec.yaml');
+/// Get pubspec [YamlMap].
+Future<YamlMap> _getPubspecYamlMap() async {
+  final pubspecYamlFile = File('pubspec.yaml');
 
-    if (!pubspecYamlFile.existsSync()) {
-      throw ArgumentError('Pubspec file not found', 'pubspec.yaml');
-    }
-
-    final pubspecYamlString = await pubspecYamlFile.readAsString();
-    return loadYaml(pubspecYamlString) as YamlMap;
+  if (!pubspecYamlFile.existsSync()) {
+    throw ArgumentError('Pubspec file not found', 'pubspec.yaml');
   }
 
-  /// Get project name from pubspec file.
-  Future<String> _getProjectName() async {
-    final pubspecYamlMap = await _getPubspecYamlMap();
-    final projectName = pubspecYamlMap['name'] as String?;
+  final pubspecYamlString = await pubspecYamlFile.readAsString();
+  return loadYaml(pubspecYamlString) as YamlMap;
+}
 
-    if (projectName == null) {
-      throw ArgumentError('Project name missing from pubspec.yaml', 'name');
-    }
+/// Get project name from pubspec file.
+Future<String> _getProjectName() async {
+  final pubspecYamlMap = await _getPubspecYamlMap();
+  final projectName = pubspecYamlMap['name'] as String?;
 
-    return projectName;
+  if (projectName == null) {
+    throw ArgumentError('Project name missing from pubspec.yaml', 'name');
   }
 
-  /// Build the web release variant.
-  Future<void> buildForWeb() async {
-    final name = await _getProjectName();
+  return projectName;
+}
 
-    await Process.run('flutter', [
-      'build',
-      'web',
-      '--release',
-      '--web-renderer',
-      'html',
-      '--base-href',
-      '/$name/build/web/',
-    ]);
+/// Build the web release variant.
+Future<void> buildForWeb() async {
+  final name = await _getProjectName();
 
-    final indexFile = File('index.html');
-    await indexFile.writeAsString(
-      '<meta http-equiv="refresh" content="0; '
-      'url=./build/web/index.html">',
-    );
-  }
+  await Process.run('flutter', [
+    'build',
+    'web',
+    '--release',
+    '--web-renderer',
+    'html',
+    '--base-href',
+    '/$name/build/web/',
+  ]);
+
+  final indexFile = File('index.html');
+  await indexFile.writeAsString(
+    '<meta http-equiv="refresh" content="0; '
+        'url=./build/web/index.html">',
+  );
 }
