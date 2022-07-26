@@ -1,3 +1,7 @@
+## 1.0.2+1
+
+* Fix formatting
+
 ## 1.0.2
 
 * Drop class to global functions

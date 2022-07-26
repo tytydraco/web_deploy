@@ -43,6 +43,6 @@ Future<void> buildForWeb() async {
   final indexFile = File('index.html');
   await indexFile.writeAsString(
     '<meta http-equiv="refresh" content="0; '
-        'url=./build/web/index.html">',
+    'url=./build/web/index.html">',
   );
 }

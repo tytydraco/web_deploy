@@ -1,6 +1,6 @@
 name: web_deploy
 description: A development tool to build a web release that is GitHub Pages ready.
-version: 1.0.2
+version: 1.0.2+1
 repository: https://www.github.com/tytydraco/web_deploy
 
 environment:
