@@ -7,9 +7,23 @@ A Flutter package to quickly build a web release that is GitHub Pages ready.
 * Depends only on `yaml` package
 * Redirects to the `build/web/index.html` automatically
 
-## Getting started
+## Install
 
-Add `web_deploy` to your project using `flutter pub add --dev web_deploy`.
+There are two ways to install `web_deploy`. It can be installed to a project locally, such that others who clone your source
+code will fetch `web_deploy` automatically as part of the developer dependencies. It can also be installed globally so
+that `web_deploy` does not need to live in your source code, but instead lives on your system.
+
+### For a specific project
+
+Simply add web_deploy to your developer dependencies for your project: `dart pub add --dev web_deploy`.
+
+### Global
+
+If you already have Dart installed, simply activate the package globally:
+
+```shell
+dart pub global activate web_deploy
+```
 
 ## Usage
 
@@ -17,6 +31,10 @@ After adding `web_deploy` to your `pubspec.yaml` and configuring any settings, y
 the build program with the following command:
 
 `flutter pub run web_deploy:main`
+
+or
+
+`web_deploy`
 
 ## GitHub Pages
 

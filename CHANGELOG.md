@@ -1,3 +1,7 @@
+## 1.0.3
+
+* Add as executable
+
 ## 1.0.2+1
 
 * Fix formatting
