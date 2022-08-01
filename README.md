@@ -30,7 +30,7 @@ dart pub global activate web_deploy
 After adding `web_deploy` to your `pubspec.yaml` and configuring any settings, you can execute
 the build program with the following command:
 
-`flutter pub run web_deploy:main`
+`flutter pub run web_deploy`
 
 or
 

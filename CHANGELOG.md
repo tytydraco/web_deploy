@@ -1,3 +1,7 @@
+## 1.0.4
+
+* Name bin as package name
+
 ## 1.0.3+1
 
 * Convert LICENSE to 2-Clause BSD
