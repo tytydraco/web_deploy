@@ -1,6 +1,7 @@
 ## 1.0.5
 
 * Remove examples
+* Convert from lib to app
 
 ## 1.0.4
 
