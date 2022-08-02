@@ -1,3 +1,7 @@
+## 1.0.5
+
+* Remove examples
+
 ## 1.0.4
 
 * Name bin as package name
